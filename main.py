@@ -1,3 +1,5 @@
+import os
+
 import pygame
 from pygame.locals import *
 import random
@@ -199,6 +201,27 @@ while run:
 
 		pipe_group.update()
 
+	# Function to load high score
+	def load_high_score():
+		if os.path.exists('highscore.txt'):
+			with open('highscore.txt', 'r') as file:
+				return int(file.read())
+		return 0
+
+
+	# Function to save high score
+	def save_high_score(score):
+		with open('highscore.txt', 'w') as file:
+			file.write(str(score))
+	high_score = load_high_score()
+	if score > high_score:
+		high_score = score
+		save_high_score(high_score)
+
+	draw_text(str(score), font, white, int(screen_width / 2), 20)
+	# Display high score only when the game is over
+	if game_over:
+		draw_text(f'High Score: {high_score}', font, white, screen_width // 2 - 100, screen_height // 2 - 200)
 
 	#check if game over and reset
 	if game_over == True:
