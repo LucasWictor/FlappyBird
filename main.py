@@ -105,3 +105,62 @@ class Pipe(pygame.sprite.Sprite):
 				if self.rect.right < 0:
 					self.kill()
 
+class Button():
+	def __init__(self, x, y, image):
+		self.image = image
+		self.rect = self.image.get_rect()
+		self.rect.topleft = (x, y)
+
+	def draw(self):
+
+		action = False
+
+		#get mouse position
+		pos = pygame.mouse.get_pos()
+
+		#check if mouse is on the button
+		if self.rect.collidepoint(pos):
+			if pygame.mouse.get_pressed()[0] == 1:
+				action = True
+
+		#render button
+		screen.blit(self.image, (self.rect.x, self.rect.y))
+
+		return action
+
+	bird_group = pygame.sprite.Group()
+	pipe_group = pygame.sprite.Group()
+
+	flappy = Bird(100, int(screen_height / 2))
+
+	bird_group.add(flappy)
+
+	# create restart button
+	button = Button(screen_width // 2 - 50, screen_height // 2 - 100, button_img)
+
+	run = True
+	while run:
+		clock.tick(fps)
+
+		# draw background
+		screen.blit(bg, (0, 0))
+
+		bird_group.draw(screen)
+		bird_group.update()
+		pipe_group.draw(screen)
+
+		# render ground
+	screen.blit(ground_img, (ground_scroll, 768))
+
+	#check the score
+	if len(pipe_group) > 0:
+		if bird_group.sprites()[0].rect.left > pipe_group.sprites()[0].rect.left\
+			and bird_group.sprites()[0].rect.right < pipe_group.sprites()[0].rect.right\
+			and pass_pipe == False:
+			pass_pipe = True
+		if pass_pipe == True:
+			if bird_group.sprites()[0].rect.left > pipe_group.sprites()[0].rect.right:
+				score += 1
+				pass_pipe = False
+
+draw_text(str(score), font, white, int(screen_width / 2), 20)
